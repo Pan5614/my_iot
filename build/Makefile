@@ -1,4 +1,4 @@
-CROSS_COMPILE= 
+CROSS_COMPILE=mips-linux-gnu-
 CXX=${CROSS_COMPILE}g++
 CC=${CROSS_COMPILE}gcc
 
@@ -15,6 +15,7 @@ CFLAGS := -w
 CFLAGS += -I${INC_DIR}
 
 
+LDFLAGS := -lpthread -lrt
 
 
 CFLAGS += -I${TOP_DIR}/mylib/iot/include
@@ -24,13 +25,15 @@ LDFLAGS += -liot_sdk -liot_platform -Bstatic -liot_tls -lgcov -L${TOP_DIR}/mylib
 .PHONY:all
 all: myiot install
 
-myiot:main.o 
-	$(CXX) main.o  -o myiot ${LDFLAGS}  
+myiot:main.o ota.o
+	$(CXX) main.o ota.o -o myiot ${LDFLAGS}  
 
 main.o: ${SRC_DIR}/main.cpp
 	$(CXX) -c ${SRC_DIR}/main.cpp ${CFLAGS} ${LDFLAGS} 
 
 
+ota.o: ${SRC_DIR}/ota.cpp
+	$(CXX) -c ${SRC_DIR}/ota.cpp ${CFLAGS} ${LDFLAGS} 
 
 
 .PHONY:install
